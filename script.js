@@ -21,16 +21,31 @@ const playAgainBtn = document.querySelector('.play-again');
 // Equations
 let questionAmount=0;
 let equationsArray = [];
-
+let playerGuessArray=[];
 // Game Page
 let firstNumber = 0;
 let secondNumber = 0;
 let equationObject = {};
-const wrongFormat = [];
+const wrongFormat = []; 
 
 // Time
 
 // Scroll
+
+let valueY =0;
+
+//scroll,store iser selection 
+function select(guessedTrue){
+  console.log('what did player guessed ',playerGuessArray)
+  valueY+=80;
+  itemContainer.scroll(0,valueY);
+//add player guess array 
+
+return guessedTrue ? playerGuessArray.push('true') : playerGuessArray.push('false');
+
+
+}
+
 
 // Get Random Number up to a certain amount
 function getRandomInt(max) {
@@ -70,26 +85,44 @@ function createEquations() {
   shuffle(equationsArray);
   console.log(equationsArray)
 }
-// Dynamically adding correct/incorrect equations
-// function populateGamePage() {
-//   // Reset DOM, Set Blank Space Above
-//   itemContainer.textContent = '';
-//   // Spacer
-//   const topSpacer = document.createElement('div');
-//   topSpacer.classList.add('height-240');
-//   // Selected Item
-//   const selectedItem = document.createElement('div');
-//   selectedItem.classList.add('selected-item');
-//   // Append
-//   itemContainer.append(topSpacer, selectedItem);
 
-//   // Create Equations, Build Elements in DOM
+// Add Equations to DOM
+function equationsToDOM() {
+  equationsArray.forEach((equation) => {
+    // Item
+    const item = document.createElement('div');
+    item.classList.add('item');
+    // Equation Text
+    const equationText = document.createElement('h1');
+    equationText.textContent = equation.value;
+    // Append
+    item.appendChild(equationText);
+    itemContainer.appendChild(item);
+  });
+}
 
-//   // Set Blank Space Below
-//   const bottomSpacer = document.createElement('div');
-//   bottomSpacer.classList.add('height-500');
-//   itemContainer.appendChild(bottomSpacer);
-// } 
+//Dynamically adding correct/incorrect equations
+function populateGamePage() {
+  // Reset DOM, Set Blank Space Above
+  itemContainer.textContent = '';
+  // Spacer
+  const topSpacer = document.createElement('div');
+  topSpacer.classList.add('height-240');
+  // Selected Item
+  const selectedItem = document.createElement('div');
+  selectedItem.classList.add('selected-item');
+  // Append
+  itemContainer.append(topSpacer, selectedItem);
+
+  // Create Equations, Build Elements in DOM
+  createEquations();
+  equationsToDOM();
+
+  // Set Blank Space Below
+  const bottomSpacer = document.createElement('div');
+  bottomSpacer.classList.add('height-500');
+  itemContainer.appendChild(bottomSpacer);
+} 
 //display 3 2 1 
 function countdownStart(){
   countdown.textContent='3';
@@ -110,7 +143,9 @@ function showCountdown(){
   countdownPage.hidden=false;
   splashPage.hidden=true;
   countdownStart();
-  createEquations();
+  populateGamePage();
+  setTimeout(showGamePage, 4000);
+
 }
 
 
@@ -147,5 +182,11 @@ startForm.addEventListener("click",()=>{
   });
 })
 
+
+// Displays Game Page
+function showGamePage() {
+  gamePage.hidden = false;
+  countdownPage.hidden = true;
+}
 //event listerner
 startForm.addEventListener("submit",selectQuestionAmount);
