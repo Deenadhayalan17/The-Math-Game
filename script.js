@@ -29,14 +29,44 @@ let equationObject = {};
 const wrongFormat = []; 
 
 // Time
+let timer;
+let timePlayed=0;
+let baseTime=0;
+let penaltyTime=0;
+let finalTime=0;
+let finalTimeDisplay='0.0s';
 
 // Scroll
 
 let valueY =0;
+// stop timer , process results go to score page;
+
+function checkTime(){
+  console.log(timePlayed)
+  if (playerGuessArray.length==questionAmount){
+    console.log('what did player guessed ',playerGuessArray)
+    clearInterval(timer)
+  }
+}
+//add a tenth of a second
+
+function addTime(){
+  timePlayed +=0.1;
+}
+
+// start time when game page is clicked
+
+function startTimer(){
+  timePlayed=0;
+  penaltyTime=0;
+  finalTime=0;
+  timer= setInterval(addTime,100);
+  gamePage.removeEventListener('click',startTimer)
+}
 
 //scroll,store iser selection 
 function select(guessedTrue){
-  console.log('what did player guessed ',playerGuessArray)
+  
   valueY+=80;
   itemContainer.scroll(0,valueY);
 //add player guess array 
@@ -166,7 +196,7 @@ function getRadioValue(){
 function selectQuestionAmount(e){
   e.preventDefault();
   questionAmount=getRadioValue();
-  console.log("squestion amount is :" +questionAmount)
+  //console.log("squestion amount is :" +questionAmount)
   if (questionAmount){
     showCountdown();}
   }
@@ -189,4 +219,5 @@ function showGamePage() {
   countdownPage.hidden = true;
 }
 //event listerner
+gamePage.addEventListener("click",startTimer);
 startForm.addEventListener("submit",selectQuestionAmount);
